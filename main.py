@@ -2,15 +2,48 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
 from pydantic import BaseModel
+import os
 
 app = FastAPI()
 
-# Allow frontend requests (dev)
+# Environment-based CORS configuration for both local and production
+def get_cors_origins() -> List[str]:
+    # Default origins for local development
+    default_origins = [
+        "http://localhost:3000",      # React default
+        "http://localhost:3001",      # Alternative React port
+        "http://localhost:8080",      # Vue default
+        "http://localhost:8081",      # Alternative Vue port
+        "http://127.0.0.1:3000",      # Local IP
+        "http://127.0.0.1:8080",      # Local IP alternative
+    ]
+    
+    # Get production origins from environment variable
+    cors_origins = os.getenv("CORS_ORIGINS", "")
+    if cors_origins:
+        # Split comma-separated origins and clean them
+        production_origins = [origin.strip() for origin in cors_origins.split(",")]
+        # Combine production and development origins
+        return production_origins + default_origins
+    
+    # Return only development origins if no env var is set
+    return default_origins
+
+# Apply CORS middleware with dynamic origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to your frontend domain in prod
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=get_cors_origins(),
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=[
+        "Content-Type",
+        "Authorization",
+        "Accept",
+        "Origin",
+        "X-Requested-With",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers",
+    ],
 )
 
 # Pydantic models
