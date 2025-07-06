@@ -76,7 +76,7 @@ Parses and validates a pipeline configuration with enhanced response format.
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git https://github.com/mohitharge/pipeline-builder-api
    cd pipeline-backend
    ```
 
