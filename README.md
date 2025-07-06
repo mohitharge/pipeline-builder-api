@@ -77,7 +77,7 @@ Parses and validates a pipeline configuration with enhanced response format.
 1. **Clone the repository:**
    ```bash
    git https://github.com/mohitharge/pipeline-builder-api
-   cd pipeline-backend
+   cd pipeline-builder-api
    ```
 
 2. **Create a virtual environment:**
